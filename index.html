@@ -6,23 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAIN</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Turret+Road:wght@200;300;400;500;700;800&display=swap');
+
+        body,
+        html {
+            font-family: "Turret Road", system-ui;
+            font-weight: 900;
+            font-style: normal;
+        }
+    </style>
 </head>
 
 <body>
+    <canvas id="canvas"></canvas>
     <header class="header">
-        <h1 class="header__tittle">ALEX-J</h1>
+        <h1 class="header__tittle"><a href="./">ALEX-J</a></h1>
     </header>
-    <div class="container__bg__image">
-        <img class="bg__image" alt="Image of background" src="img/Alex.jpg">
+    <div class="container__image">
+        <img class="container__image__alex" alt="Image of background" src="img/Alex.jpg">
     </div>
     <nav class="navbar__directorys">
         <ul class="directorys__list">
             <li class="directorys__list__directory"><a class="directory__link" href="SOBRE MI/">SOBRE MÍ</a></li>
-            <li class="directorys__list__directory"><a class="directory__link" href="TECNOLOGIAS/">TECNOLOGíAS</a></li>
+            <li class="directorys__list__directory"><a class="directory__link" href="TECNOLOGIAS/">TECNOLOGÍAS</a></li>
             <li class="directorys__list__directory"><a class="directory__link" href="PROYECTOS/">PROYECTOS</a></li>
             <li class="directorys__list__directory"><a class="directory__link" href="CONTACTO/">CONTACTO</a></li>
         </ul>
     </nav>
+    <div id="custom-cursor">
+        <div id="cursor__dot"></div>
+    </div>
+    <script src="script.js"></script>
 </body>
 
 </html>
