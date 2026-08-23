@@ -1,0 +1,73 @@
+:root {
+    --height-header: clamp(20px, 10vh, 55px);
+    --imagen-circle-medidas: clamp(150px, 25vw, 800px);
+    --tittle-font-size: clamp(20px, 4vw, 40px);
+    --subttitle-font-size: clamp(15px, 3vw, 30px);
+    --font-size: clamp(10px, 2vw, 20px);
+    --bg-color: #011804;
+    --first-color: #079C19;
+    --second-color: #057012;
+    --font-color: #D6FECC;
+    --tittle-color: #a35808;
+    --subtittle-color: #a35808;
+}
+
+html,
+body {
+    background-color: var(--bg-color);
+    width: 100dvw;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    width: 100%;
+    height: var(--height-header);
+    background-color: var(--first-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header__tittle {
+    font-size: var(--tittle-font-size);
+    color: var(--tittle-color);
+}
+
+.navbar__directorys {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.directorys__list {
+    margin-left: 10px;
+    padding: 0;
+    display: grid;
+    gap: 15px;
+}
+
+.directorys__list__directory {
+    list-style: none;
+}
+
+.directory__link {
+    text-decoration: none;
+}
+
+.container__bg__image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.bg__image {
+    object-fit: cover;
+    object-position: top;
+    object-view-box: 100% 100%;
+}
