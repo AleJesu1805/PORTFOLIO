@@ -6,16 +6,16 @@
     --font-size: clamp(10px, 2vw, 20px);
     --margin-small: clamp(25px, 4vw, 50px);
     --bg-color: #011804;
-    --first-color: #079C19;
+    --first-color: #4a754f;
     --second-color: #057012;
     --font-color: #D6FECC;
-    --tittle-color: #a35808;
+    --tittle-color: #7aa308;
     --subtittle-color: #a35808;
 }
 
 html,
 body {
-    background-color: var(--bg-color);
+    background: var(--bg-color);
     width: 100%;
     height: 100%;
     margin: 0;
@@ -26,7 +26,7 @@ body {
     box-sizing: border-box;
 }
 
-#custom-cursor {
+.custom-cursor {
     /* background-color: #782e00; */
     padding: 0px;
     margin: 0;
@@ -35,10 +35,10 @@ body {
     position: fixed;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    transition: padding .2s, filter .2s;
+    transition: padding .2s, filter .2s, left .1s, top .1s;
 }
 
-#cursor__dot {
+.custom-cursor .cursor__dot {
     background-color: #8ddc33;
     padding: 5px;
     border-radius: 100%;
@@ -50,30 +50,28 @@ a {
     cursor: none;
 }
 
-body:has(a:hover) #custom-cursor {
+body:has(a:hover, .container__image__alex:hover, #close-dialog:hover) .custom-cursor {
     transform: translate(-50%, -50%);
     padding: 10px;
     filter: hue-rotate(180deg);
 }
 
-/* body:has(a:hover) #cursor__dot {} */
-
 #canvas {
     width: 100dvw;
     height: 100dvh;
-    position: fixed;
-    top: 0;
-    left: 0;
+    display: block;
+    background: var(--bg-color);
 }
 
 .header {
     width: 100%;
     height: fit-content;
-    background-color: var(--first-color);
+    backdrop-filter: hue-rotate(180deg) blur(1px);
+    box-shadow: 0px 5px 15px 10px black;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky;
+    position: fixed;
     top: 0%;
 }
 
@@ -82,6 +80,13 @@ body:has(a:hover) #custom-cursor {
     font-size: var(--tittle-font-size);
     color: var(--tittle-color);
     margin: 0;
+    filter: saturate(1);
+    transition: filter .5s, letter-spacing .5s;
+
+    &:hover {
+        filter: saturate(2);
+        letter-spacing: 4px;
+    }
 }
 
 .navbar__directorys {
@@ -90,13 +95,15 @@ body:has(a:hover) #custom-cursor {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    border-radius: 10px;
+    backdrop-filter: blur(3px) contrast(0.8);
 }
 
 .directorys__list {
-    margin-left: 10px;
-    padding: 0;
+    /* margin-left: 10px; */
+    padding: 10px;
     display: grid;
-    gap: 15px;
+    gap: 30px;
 }
 
 .directorys__list__directory {
@@ -107,10 +114,15 @@ body:has(a:hover) #custom-cursor {
     text-decoration: none;
     font-size: var(--subttitle-font-size);
     color: var(--subtittle-color);
+    transition: font-size .3s;
+
+    &:hover {
+        font-size: calc(var(--subttitle-font-size)*1.2);
+    }
 }
 
 .container__image {
-    width: fit-content;
+    width: var(--image-size);
     height: var(--image-size);
     position: fixed;
     right: 0;
@@ -118,15 +130,78 @@ body:has(a:hover) #custom-cursor {
     transform: translate(0%, 50%);
     margin-right: var(--margin-small);
     display: flex;
+    justify-content: center;
+    /* align-items: center; */
     gap: 10px;
+    overflow: hidden;
+    border-radius: 30px;
     /* background-color: #057012; */
 }
 
 .container__image__alex {
+    width: 80%;
+    height: 600px;
+    object-fit: cover;
+    object-position: center top;
+    aspect-ratio: 0.59008;
+    border-radius: 30px;
+    transition: width .3s, scale .3s;
+
+    &:hover {
+        width: 100%;
+        scale: 1.1;
+    }
+}
+
+#preview-image {
+    width: 70%;
+    height: 70%;
+    padding: 10px;
+    border: none;
+    border-radius: 30px;
+    overflow: hidden;
+    background: var(--first-color);
+    /* transform: scale(0); */
+    height: 0;
+    transition: height .3s;
+
+    &::backdrop {
+        background: rgba(1, 24, 4, 0.35);
+        backdrop-filter: blur(8px);
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.dialog__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top;
-    aspect-ratio: 0.59008;
     border-radius: 30px;
+    display: block;
+    /* user-select: none; */
+}
+
+#close-dialog {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    padding: 20px;
+    border: none;
+    background: #ba1212;
+    border-radius: 100%;
+    cursor: none;
+    transition: scale .4s;
+
+    &:hover {
+        scale: 1.5;
+    }
+
+    &:focus {
+        outline: none;
+    }
 }
