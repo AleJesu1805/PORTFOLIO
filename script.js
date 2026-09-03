@@ -27,7 +27,39 @@ closeButton.addEventListener('pointerdown', () => {
     previewImage.close();
 });
 
+// PRUEBA HOVER
+
+let burbles = [];
+
+document.addEventListener('mousemove', () => {
+    const enlacesHover = document.querySelectorAll('.directory__link');
+
+    enlacesHover.forEach((enlace, i) => {
+        if (enlace.matches(':hover')) {
+            if (i === 1) {
+                burbles.forEach((burble) => {
+                    burble.colorFill = `hsla(${i * 2 + 130}, ${saturacion * 2}%, ${luminosidad * 2}%, ${alpaha})`;
+                    console.log(burble.colorFill);
+                });
+            }
+        } else {
+            burbles.forEach((burble) => {
+                burble.colorFill = `hsla(${i * 2 + 130}, ${saturacion}%, ${luminosidad}%, ${alpaha})`;
+                // console.log(burble.colorFill);
+            });
+
+        }
+    })
+
+});
+
 // CANVAS
+// COLOR
+let tono = 130;
+let saturacion = 83;
+let luminosidad = 25;
+let alpaha = 0.72;
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth / 3;
@@ -69,16 +101,18 @@ class Burbles {
     }
 }
 
-let burbles = [];
+function crearBurbles() {
+    for (let i = 0; i < 10; i++) {
+        const size = ramdomNumber(5, 20);
+        const speedX = ramdomNumber(-5, 5);
+        const speedY = ramdomNumber(-5, 5);
 
-for (let i = 0; i < 20; i++) {
-    const size = ramdomNumber(5, 20);
-    const speedX = ramdomNumber(-5, 5);
-    const speedY = ramdomNumber(-5, 5);
-
-    const burble = new Burbles(speedX, speedY, ramdomNumber(0, canvas.width), ramdomNumber(0, canvas.height), size, `hsla(${i * 2 + 130}, 83%, 25%, 0.72)`, 'transparent');
-    burbles.push(burble);
+        const burble = new Burbles(speedX, speedY, ramdomNumber(0, canvas.width), ramdomNumber(0, canvas.height), size, `hsla(${i * 2 + 130}, ${saturacion}%, ${luminosidad}%, ${alpaha})`, 'transparent');
+        burbles.push(burble);
+    }
 }
+crearBurbles();
+
 
 const fps = 20;
 const frameDuration = 1000 / fps;
@@ -98,7 +132,6 @@ function animate(tiempoActual) {
         burble.move();
         burble.draw();
     });
-
     const debeRecalcularRuta = frameCount % intervaloRecalculoRuta === 0;
     frameCount++;
 

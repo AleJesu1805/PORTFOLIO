@@ -35,7 +35,7 @@ body {
     position: fixed;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    transition: padding .2s, filter .2s, left .1s, top .1s;
+    transition: padding .2s, filter .2s;
 }
 
 .custom-cursor .cursor__dot {
