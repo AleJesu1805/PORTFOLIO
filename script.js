@@ -1,16 +1,37 @@
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext("2d")
+
 // CURSOR
 const customCursor = document.querySelectorAll('.custom-cursor');
 
-document.body.style.cursor = 'none';
+function renderCustomCursor(x, y, lineWidth, size) {
+    // Iniciar la ruta de dibujo
+    ctx.beginPath();
+
+    // Parámetros de arc(x, y, radio, ánguloInicio, ánguloFin)
+    ctx.arc(x, y, size, 0, 2 * Math.PI);
+
+    // Rellenar el círculo
+    ctx.fillStyle = 'blue';
+    ctx.fill();
+
+    // Dibujar el borde del círculo
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+
+}
 
 document.addEventListener('mousemove', (e) => {
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+    let mouseX = e.x
+    let mouseY = e.y
+
     customCursor.forEach((cursor) => {
         cursor.style.left = mouseX + 'px';
         cursor.style.top = mouseY + 'px';
     });
-});
+})
+
 
 // MODAL
 const imageAlex = document.querySelector('.container__image__alex');
@@ -27,119 +48,107 @@ closeButton.addEventListener('pointerdown', () => {
     previewImage.close();
 });
 
-// PRUEBA HOVER
-
-let burbles = [];
-
-document.addEventListener('mousemove', () => {
-    const enlacesHover = document.querySelectorAll('.directory__link');
-
-    enlacesHover.forEach((enlace, i) => {
-        if (enlace.matches(':hover')) {
-            if (i === 1) {
-                burbles.forEach((burble) => {
-                    burble.colorFill = `hsla(${i * 2 + 130}, ${saturacion * 2}%, ${luminosidad * 2}%, ${alpaha})`;
-                    console.log(burble.colorFill);
-                });
-            }
-        } else {
-            burbles.forEach((burble) => {
-                burble.colorFill = `hsla(${i * 2 + 130}, ${saturacion}%, ${luminosidad}%, ${alpaha})`;
-                // console.log(burble.colorFill);
-            });
-
-        }
-    })
-
-});
-
 // CANVAS
-// COLOR
-let tono = 130;
-let saturacion = 83;
-let luminosidad = 25;
-let alpaha = 0.72;
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth / 3;
-canvas.height = window.innerHeight / 3;
-let hue = 0;
 
-function ramdomNumber(min, max) {
-    return min + Math.random() * (max - min);
+const BACKGROUND = "#101010"
+const FOREGROUND = "#50FF50"
+const LINE_WIDTH = 1
+
+canvas.width = 800
+canvas.height = 800
+
+function clear() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 }
 
-class Burbles {
-    constructor(speedX, speedY, x, y, size, colorFill, colorStroke) {
-        this.speedX = speedX;
-        this.speedY = speedY;
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.colorFill = colorFill;
-        this.colorStroke = colorStroke;
-    }
-    move() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        if (this.x < 0) this.x = canvas.width;
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-        if (this.y > canvas.height) this.y = 0;
-    }
-
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-        ctx.fillStyle = this.colorFill;
-        ctx.fill();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = this.colorStroke;
-        ctx.stroke();
-    }
+function point({ x, y }) {
+    const s = 2;
+    ctx.fillStyle = FOREGROUND
+    ctx.fillRect(x - s / 2, y - s / 2, s, s)
 }
 
-function crearBurbles() {
-    for (let i = 0; i < 10; i++) {
-        const size = ramdomNumber(5, 20);
-        const speedX = ramdomNumber(-5, 5);
-        const speedY = ramdomNumber(-5, 5);
+const VERTEX_COUNT = vs.length
 
-        const burble = new Burbles(speedX, speedY, ramdomNumber(0, canvas.width), ramdomNumber(0, canvas.height), size, `hsla(${i * 2 + 130}, ${saturacion}%, ${luminosidad}%, ${alpaha})`, 'transparent');
-        burbles.push(burble);
+const origX = new Float64Array(VERTEX_COUNT)
+const origY = new Float64Array(VERTEX_COUNT)
+const origZ = new Float64Array(VERTEX_COUNT)
+for (let i = 0; i < VERTEX_COUNT; i++) {
+    origX[i] = vs[i].x
+    origY[i] = vs[i].y
+    origZ[i] = vs[i].z
+}
+
+const screenX = new Float64Array(VERTEX_COUNT)
+const screenY = new Float64Array(VERTEX_COUNT)
+
+const edgeSet = new Set()
+const edgeA = []
+const edgeB = []
+for (const f of fs) {
+    for (let i = 0; i < f.length; i++) {
+        const a = f[i]
+        const b = f[(i + 1) % f.length]
+        if (a === b) continue
+        const key = a < b ? a * VERTEX_COUNT + b : b * VERTEX_COUNT + a
+        if (!edgeSet.has(key)) {
+            edgeSet.add(key)
+            edgeA.push(a)
+            edgeB.push(b)
+        }
     }
 }
-crearBurbles();
+const edgeA32 = Int32Array.from(edgeA)
+const edgeB32 = Int32Array.from(edgeB)
+const EDGE_COUNT = edgeA32.length
 
+let dz = 1.5
+let angle = 0
+let lastTime = null
 
-const fps = 20;
-const frameDuration = 1000 / fps;
-let ultimoTiempo = 0;
+function frame(time) {
+    if (lastTime === null) lastTime = time
+    const dt = (time - lastTime) / 1000
+    lastTime = time
+    // dz += 1*dt
+    angle += Math.PI / 2 * dt
 
-const intervaloRecalculoRuta = 120;
-let frameCount = 0;
+    clear()
 
-function animate(tiempoActual) {
-    requestAnimationFrame(animate);
-    const delta = tiempoActual - ultimoTiempo;
-    if (delta < frameDuration) return;
-    ultimoTiempo = tiempoActual - (delta % frameDuration);
+    const c = Math.cos(angle)
+    const s = Math.sin(angle)
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    burbles.forEach(burble => {
-        burble.move();
-        burble.draw();
-    });
-    const debeRecalcularRuta = frameCount % intervaloRecalculoRuta === 0;
-    frameCount++;
+    for (let i = 0; i < VERTEX_COUNT; i++) {
+        const x = origX[i]
+        const y = origY[i]
+        const z = origZ[i]
 
-    if (debeRecalcularRuta) {
-        burbles.forEach(burble => {
-            burble.speedX = Math.cos(ramdomNumber(0, 2 * Math.PI));
-            burble.speedY = Math.sin(ramdomNumber(0, 2 * Math.PI));
-        });
+        const rx = x * c - z * s
+        const rz = x * s + z * c
+
+        const tz = rz + dz
+
+        const px = rx / tz
+        const py = y / tz
+
+        screenX[i] = (px + 1) / 2 * canvas.width
+        screenY[i] = (1 - (py + 1) / 2) * canvas.height
     }
+
+    ctx.lineWidth = LINE_WIDTH
+    ctx.strokeStyle = FOREGROUND
+    ctx.beginPath()
+    for (let i = 0; i < EDGE_COUNT; i++) {
+        const a = edgeA32[i]
+        const b = edgeB32[i]
+        ctx.moveTo(screenX[a], screenY[a])
+        ctx.lineTo(screenX[b], screenY[b])
+    }
+    ctx.stroke()
+
+    for (let i = 0; i < VERTEX_COUNT; i++) point({ x: screenX[i], y: screenY[i] })
+
+    // renderCustomCursor(mouseX, mouseY, 1, 10)
+    requestAnimationFrame(frame)
 }
-requestAnimationFrame(animate);
+requestAnimationFrame(frame)

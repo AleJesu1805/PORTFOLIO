@@ -13,6 +13,18 @@
     --subtittle-color: #a35808;
 }
 
+@view-transition {
+    navigation: auto;
+}
+
+/* ::view-transition-old(root) {
+    animation: .7s linear;
+}
+
+::view-transition-new(root) {
+    animation: .7s linear;
+} */
+
 html,
 body {
     background: var(--bg-color);
@@ -20,6 +32,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+    cursor: none;
 }
 
 * {
@@ -57,9 +70,14 @@ body:has(a:hover, .container__image__alex:hover, #close-dialog:hover) .custom-cu
 }
 
 #canvas {
-    width: 100dvw;
-    height: 100dvh;
+    width: min(100dvh, 100dvw);
+    aspect-ratio: 1/1;
     display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* border: 3px solid yellow; */
     background: var(--bg-color);
 }
 

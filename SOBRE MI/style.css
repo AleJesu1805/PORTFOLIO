@@ -14,6 +14,18 @@
     --subtittle-color: #20a411;
 }
 
+@view-transition {
+    navigation: auto;
+}
+
+/* ::view-transition-old(root) {
+    animation: 2s linear;
+}
+
+::view-transition-new(root) {
+    animation: 2s linear;
+} */
+
 html,
 body {
     background: var(--bg-color);
